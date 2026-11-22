@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeachyPrint — Visual Paper Format (A0–A5) &amp; Print DPI Simulator</title>
+  <meta name="description" content="Simulate placing A5–A0 artwork inside any target paper sheet, resize interactively, check live print DPI with green-to-red pixelation warnings, and export crisp PNG or true-size ISO PDF files." />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4588627708948117" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand" aria-label="PeachyPrint Home">
+        <img src="/assets/favicon.svg" alt="" class="brand-icon" width="40" height="40" />
+        <span>Peachy<span class="brand-accent">Print</span></span>
+      </a>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="/" class="nav-link active">Simulator</a>
+        <a href="#guide" class="nav-link">ISO &amp; DPI Guide</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/contact" class="nav-link">Contact</a>
+        <a href="/privacy" class="nav-link">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <span class="hero-pill">✦ ISO A0–A5 Paper &amp; Print Resolution Studio</span>
+        <h1>
+          Preview your print <span class="highlight-pink">before</span> it goes
+          <span class="highlight-pill">blurry</span>
+        </h1>
+        <p class="hero-sub">
+          Place an A5–A0 source sheet inside any target paper size (like A4 inside A2), drag &amp; resize live,
+          watch the green-to-red DPI border, and export print-ready PNG or true-size PDF.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Interactive Simulator -->
+    <section class="simulator-section" aria-label="Paper Format and Print DPI Simulator">
+      <div class="container simulator-grid">
+        <!-- Left Controls Sidebar -->
+        <aside class="controls-column" aria-label="Simulation Controls">
+          <!-- Step 1: Source Artwork -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="step-badge">1</span> Artwork or Sample Sheet</h2>
+              <span class="card-meta">Local Only</span>
+            </div>
+
+            <label class="dropzone" id="dropzone" for="fileInput">
+              <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+              <span class="dropzone-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </span>
+              <span class="dropzone-title">Drop an image, click to upload, or Paste</span>
+              <span class="dropzone-hint">PNG, JPG, WebP, SVG · Never uploaded to any server</span>
+            </label>
+
+            <div class="loaded-file-pill" aria-live="polite">
+              <span class="loaded-file-name" id="loadedFileName">Peach Blossom Print (300 DPI)</span>
+              <span class="loaded-file-dims" id="loadedFileDims">2480 × 3508 px</span>
+            </div>
+
+            <p class="samples-label">Or try a sample sheet</p>
+            <div class="sample-grid" id="sampleGrid" role="group" aria-label="Sample print sheets"></div>
+          </div>
+
+          <!-- Step 2: Source & Target Paper Formats -->
+          <div class="card card-yellow">
+            <div class="card-header">
+              <h2 class="card-title"><span class="step-badge">2</span> Source &amp; Target Paper</h2>
+              <span class="card-meta">ISO 216</span>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label-row">
+                <span class="field-label">Source Sheet Format (Your Design)</span>
+                <span class="field-dim" id="sourceDimLabel">210 × 297 mm</span>
+              </div>
+              <div class="format-pills" id="sourceFormatPills" role="group" aria-label="Source paper format"></div>
+              <div class="inline-row">
+                <div class="seg-group" id="sourceOrientSeg" role="group" aria-label="Source orientation">
+                  <button type="button" class="seg-btn active" data-orient="portrait">↕ Portrait</button>
+                  <button type="button" class="seg-btn" data-orient="landscape">↔ Landscape</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label-row">
+                <span class="field-label">Target Sheet Format (Print Canvas)</span>
+                <span class="field-dim" id="targetDimLabel">420 × 594 mm</span>
+              </div>
+              <div class="format-pills" id="targetFormatPills" role="group" aria-label="Target paper format"></div>
+              <div class="inline-row">
+                <div class="seg-group" id="targetOrientSeg" role="group" aria-label="Target orientation">
+                  <button type="button" class="seg-btn active" data-orient="portrait">↕ Portrait</button>
+                  <button type="button" class="seg-btn" data-orient="landscape">↔ Landscape</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label-row">
+                <span class="field-label">Image Fit Inside Source Sheet</span>
+              </div>
+              <div class="seg-group" id="fitModeSeg" role="group" aria-label="Image fit mode">
+                <button type="button" class="seg-btn active" data-fit="contain" title="Preserves full image inside ISO sheet">Contain</button>
+                <button type="button" class="seg-btn" data-fit="cover" title="Fills entire ISO sheet without borders">Cover</button>
+                <button type="button" class="seg-btn" data-fit="image" title="Matches sheet aspect ratio to image">Native Ratio</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Scale, Quality Profile & Visual Helpers -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="step-badge">3</span> Scale &amp; DPI Threshold</h2>
+              <span class="scale-number-badge" id="scaleNumberBadge">100%</span>
+            </div>
+
+            <div class="scale-control-row">
+              <button type="button" class="icon-step-btn" id="scaleDownBtn" aria-label="Decrease scale by 10 percent">−</button>
+              <input type="range" id="scaleSlider" class="peachy-range" min="10" max="400" value="100" step="1" aria-label="Source sheet scale percentage" />
+              <button type="button" class="icon-step-btn" id="scaleUpBtn" aria-label="Increase scale by 10 percent">+</button>
+            </div>
+
+            <div class="quick-actions">
+              <button type="button" class="chip-btn" id="btnReset100">100% True Size</button>
+              <button type="button" class="chip-btn" id="btnFitTarget">Fit Target</button>
+              <button type="button" class="chip-btn chip-btn-green" id="btnMaxSafe">Max Safe (Green)</button>
+              <button type="button" class="chip-btn" id="btnCenterSheet">Center</button>
+            </div>
+
+            <div class="field-group" style="margin-top: 0.9rem;">
+              <div class="field-label-row">
+                <label class="field-label" for="qualitySelect">Print Quality Standard</label>
+              </div>
+              <select id="qualitySelect" class="peachy-select">
+                <option value="standard" selected>Standard Print (Safe ≥ 150 DPI)</option>
+                <option value="fineart">Fine Art &amp; Photo (Safe ≥ 240 DPI)</option>
+                <option value="poster">Wall Poster Viewing (Safe ≥ 100 DPI)</option>
+              </select>
+            </div>
+
+            <div class="toggle-list">
+              <label class="toggle-row">
+                <span>Simulate real pixelation when low DPI</span>
+                <input type="checkbox" id="togglePixelation" checked />
+              </label>
+              <label class="toggle-row">
+                <span>Show millimeter rulers &amp; margin grid</span>
+                <input type="checkbox" id="toggleRulers" checked />
+              </label>
+              <label class="toggle-row">
+                <span>Enable 3× hover Print Loupe magnifier</span>
+                <input type="checkbox" id="toggleLoupe" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 4: Export -->
+          <div class="card card-yellow">
+            <div class="card-header">
+              <h2 class="card-title"><span class="step-badge">4</span> Export Target Sheet</h2>
+              <span class="card-meta">PNG · PDF · JPG</span>
+            </div>
+
+            <div class="export-options-grid">
+              <div>
+                <label class="field-label" for="exportFormatSelect" style="display:block; margin-bottom:0.35rem;">Format</label>
+                <select id="exportFormatSelect" class="peachy-select">
+                  <option value="png" selected>PNG (Lossless)</option>
+                  <option value="pdf">PDF (True ISO Size)</option>
+                  <option value="jpeg">JPEG (Print Photo)</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label" for="exportDpiSelect" style="display:block; margin-bottom:0.35rem;">Export DPI</label>
+                <select id="exportDpiSelect" class="peachy-select">
+                  <option value="150" selected>150 DPI (Fast)</option>
+                  <option value="300">300 DPI (High-Res)</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="toggle-row" style="margin-bottom: 0.85rem;">
+              <span>Include corner trim / crop marks</span>
+              <input type="checkbox" id="exportCropMarks" />
+            </label>
+
+            <button type="button" class="btn-primary" id="btnExport">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download Print Sheet
+            </button>
+            <p class="export-note">PDF exports keep exact physical ISO dimensions in mm for print shops.</p>
+          </div>
+        </aside>
+
+        <!-- Right Interactive Canvas Stage -->
+        <div class="stage-column">
+          <!-- Live Dynamic Green-to-Red Status Banner -->
+          <div class="status-banner is-sharp" id="statusBanner" role="status" aria-live="polite">
+            <div class="status-left">
+              <div class="status-dot-ring" id="statusIcon" aria-hidden="true">✓</div>
+              <div>
+                <h2 class="status-heading" id="statusHeading">Sharp &amp; Print-Ready — Green Border</h2>
+                <p class="status-desc" id="statusDesc">Crisp detail with zero noticeable pixelation on A2.</p>
+              </div>
+            </div>
+            <div class="status-right">
+              <div class="dpi-meter-box">
+                <div class="dpi-readout-row">
+                  <span class="dpi-value" id="dpiValue">300 DPI</span>
+                  <span class="dpi-sub" id="dpiThresholdText">Safe ≥ 150 DPI</span>
+                </div>
+                <div class="dpi-bar-track">
+                  <div class="dpi-bar-fill" id="dpiBarFill"></div>
+                </div>
+              </div>
+              <button type="button" class="snap-safe-btn" id="snapSafeBtn">Snap to Safe Size</button>
+            </div>
+          </div>
+
+          <!-- Quick Telemetry Chips -->
+          <div class="metrics-strip">
+            <div class="metric-chip">
+              <div class="metric-label">Simulated Size (mm)</div>
+              <div class="metric-val" id="metricPrintedSize">210 × 297 mm</div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-label">Simulated Size (in)</div>
+              <div class="metric-val" id="metricPrintedIn">8.3 × 11.7 in</div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-label">Source Pixels</div>
+              <div class="metric-val" id="metricSourcePx">2480 × 3508 px</div>
+            </div>
+            <div class="metric-chip">
+              <div class="metric-label">Safe Green Limit</div>
+              <div class="metric-val" id="metricMaxSafe">200% max</div>
+            </div>
+          </div>
+
+          <!-- Interactive Paper Canvas -->
+          <div class="workspace-card" id="workspaceCard">
+            <div class="workspace-toolbar">
+              <span class="workspace-pill" id="workspaceSummary">Placing <code>A4</code> inside <code>A2</code> · Scale <code>100%</code></span>
+              <span class="workspace-tip">Drag sheet to move · Drag corners to resize · Arrow keys nudge</span>
+            </div>
+
+            <div class="stage-viewport" id="stageViewport">
+              <div class="target-sheet-wrapper">
+                <div class="ruler-top" id="rulerTop" aria-hidden="true"></div>
+                <div class="ruler-left" id="rulerLeft" aria-hidden="true"></div>
+
+                <div class="target-sheet" id="targetSheet" aria-label="Target paper sheet canvas">
+                  <div class="target-sheet-grid" aria-hidden="true"></div>
+                  <div class="target-safe-margin" aria-hidden="true"></div>
+                  <div class="snap-guide-v" id="snapGuideV" aria-hidden="true"></div>
+                  <div class="snap-guide-h" id="snapGuideH" aria-hidden="true"></div>
+
+                  <div
+                    class="source-sheet"
+                    id="sourceSheet"
+                    tabindex="0"
+                    role="application"
+                    aria-label="Draggable and resizable source paper sheet. Use arrow keys to move and plus or minus keys to scale."
+                  >
+                    <canvas class="source-canvas" id="sourceCanvas"></canvas>
+                    <span class="sheet-status-pill" id="sheetStatusPill">✓ 300 DPI · Sharp</span>
+                    <span class="sheet-size-pill" id="sheetSizePill">A4 · 210×297 mm (100%)</span>
+
+                    <div class="resize-handle" data-handle="nw" title="Drag to resize proportionally"></div>
+                    <div class="resize-handle" data-handle="ne" title="Drag to resize proportionally"></div>
+                    <div class="resize-handle" data-handle="sw" title="Drag to resize proportionally"></div>
+                    <div class="resize-handle" data-handle="se" title="Drag to resize proportionally"></div>
+                  </div>
+
+                  <span class="target-corner-label" id="targetCornerLabel">Target: A2 · 420 × 594 mm</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hover Magnifier Loupe -->
+            <div class="loupe-lens" id="loupeLens" aria-hidden="true">
+              <canvas class="loupe-canvas" id="loupeCanvas" width="144" height="144"></canvas>
+              <span class="loupe-tag" id="loupeTag">3× Print Zoom</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational Guide Section (ISO Paper Sizes, DPI vs Pixelation, Print Tips & FAQ) -->
+    <section class="guide-section" id="guide" aria-label="Educational Guide on ISO Paper Sizes and Print DPI">
+      <div class="container">
+        <div class="section-heading-wrap">
+          <span class="section-eyebrow">Print Clarity Handbook</span>
+          <h2>Understanding ISO Paper Sizes (A0–A5) &amp; Print DPI</h2>
+          <p>
+            Every ISO “A” paper sheet shares the exact same √2 aspect ratio (1 : 1.4142), so halving one size
+            produces the next smaller size — yet enlarging an image across formats reduces its pixel density dramatically.
+          </p>
+        </div>
+
+        <!-- Interactive Nested Diagram + Complete Table -->
+        <div class="guide-grid">
+          <article class="card iso-diagram-card">
+            <div>
+              <h3 class="card-title" style="margin-bottom:0.35rem;">Interactive ISO A0–A5 Scale Map</h3>
+              <p style="margin:0 0 0.7rem; font-size:0.88rem; color:var(--text-soft);">
+                Click any paper format below to see its exact dimensions and load it straight into the simulator.
+              </p>
+
+              <div class="iso-nested-box" role="group" aria-label="Interactive nested ISO A0 to A5 size chart">
+                <button type="button" class="iso-zone a0" data-iso="A0"><span>A0</span><small>841 × 1189 mm</small></button>
+                <button type="button" class="iso-zone a1" data-iso="A1"><span>A1</span><small>594 × 841 mm</small></button>
+                <button type="button" class="iso-zone a2" data-iso="A2"><span>A2</span><small>420 × 594 mm</small></button>
+                <button type="button" class="iso-zone a3" data-iso="A3"><span>A3</span><small>297 × 420 mm</small></button>
+                <button type="button" class="iso-zone a4" data-iso="A4"><span>A4</span><small>210 × 297</small></button>
+                <button type="button" class="iso-zone a5" data-iso="A5"><span>A5</span></button>
+              </div>
+            </div>
+
+            <div class="iso-selected-bar">
+              <div id="isoSelectedInfo">
+                <strong>A4</strong> (210 × 297 mm) · 300 DPI needs <code>2480 × 3508 px</code>.
+              </div>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="chip-btn" id="isoUseSourceBtn">Set as Source</button>
+                <button type="button" class="chip-btn" id="isoUseTargetBtn">Set as Target</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3 class="card-title" style="margin-bottom:0.35rem;">ISO 216 Dimensions &amp; Required Pixel Resolutions</h3>
+            <p style="margin:0 0 0.9rem; font-size:0.88rem; color:var(--text-soft);">
+              Notice how moving up two steps (such as scaling an <strong>A4</strong> sheet up to fill an <strong>A2</strong> poster)
+              doubles both width and height — which cuts your effective DPI in half (e.g., 300 DPI drops to 150 DPI).
+            </p>
+            <div class="table-wrap">
+              <table class="iso-table">
+                <thead>
+                  <tr>
+                    <th>Format</th>
+                    <th>Millimeters</th>
+                    <th>Inches</th>
+                    <th>300 DPI (Crisp)</th>
+                    <th>150 DPI (Safe)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="format-tag">A0</span></td>
+                    <td class="mono">841 × 1189</td>
+                    <td class="mono">33.1 × 46.8</td>
+                    <td class="mono">9933 × 14043 px</td>
+                    <td class="mono">4967 × 7022 px</td>
+                  </tr>
+                  <tr>
+                    <td><span class="format-tag">A1</span></td>
+                    <td class="mono">594 × 841</td>
+                    <td class="mono">23.4 × 33.1</td>
+                    <td class="mono">7016 × 9933 px</td>
+                    <td class="mono">3508 × 4967 px</td>
+                  </tr>
+                  <tr>
+                    <td><span class="format-tag">A2</span></td>
+                    <td class="mono">420 × 594</td>
+                    <td class="mono">16.5 × 23.4</td>
+                    <td class="mono">4961 × 7016 px</td>
+                    <td class="mono">2480 × 3508 px</td>
+                  </tr>
+                  <tr>
+                    <td><span class="format-tag">A3</span></td>
+                    <td class="mono">297 × 420</td>
+                    <td class="mono">11.7 × 16.5</td>
+                    <td class="mono">3508 × 4961 px</td>
+                    <td class="mono">1754 × 2480 px</td>
+                  </tr>
+                  <tr>
+                    <td><span class="format-tag">A4</span></td>
+                    <td class="mono">210 × 297</td>
+                    <td class="mono">8.3 × 11.7</td>
+                    <td class="mono">2480 × 3508 px</td>
+                    <td class="mono">1240 × 1754 px</td>
+                  </tr>
+                  <tr>
+                    <td><span class="format-tag">A5</span></td>
+                    <td class="mono">148 × 210</td>
+                    <td class="mono">5.8 × 8.3</td>
+                    <td class="mono">1748 × 2480 px</td>
+                    <td class="mono">874 × 1240 px</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+
+        <!-- 3 Educational Concept Cards -->
+        <div class="edu-cards-grid">
+          <article class="edu-card">
+            <div class="edu-icon" aria-hidden="true">📐</div>
+            <h3>What Is Effective Print DPI?</h3>
+            <p>
+              <strong>DPI (Dots Per Inch)</strong> — often used interchangeably with <strong>PPI (Pixels Per Inch)</strong> —
+              measures how tightly your image’s pixels are packed onto physical paper. An image doesn’t have a fixed print quality
+              until you decide how big you will print it.
+            </p>
+            <div class="formula-box">Effective DPI = Image Pixels ÷ Printed Inches</div>
+          </article>
+
+          <article class="edu-card">
+            <div class="edu-icon" aria-hidden="true">🔍</div>
+            <h3>Why Screens Look Sharp While Prints Blur</h3>
+            <p>
+              Web images and social media graphics are typically saved around 72–96 PPI because phone and laptop screens
+              are backlit and viewed briefly. Paper reflects ambient light and reveals jagged “stair-step” edges and fuzzy text
+              whenever pixel density drops below ~150 DPI at reading distance.
+            </p>
+            <div class="formula-box">Green ≥ Safe DPI · Red &lt; Safe DPI</div>
+          </article>
+
+          <article class="edu-card">
+            <div class="edu-icon" aria-hidden="true">👀</div>
+            <h3>Viewing Distance Matters</h3>
+            <p>
+              An <strong>A5 postcard</strong> or <strong>A4 résumé</strong> is held 30 cm from the eyes, so 240–300 DPI keeps
+              small text razor-sharp. A giant <strong>A1 or A0 wall poster</strong> is viewed from 1–2 meters away, so
+              100–150 DPI still looks smooth and vibrant to the human eye.
+            </p>
+            <div class="formula-box">Closer Viewing = Higher DPI Needed</div>
+          </article>
+        </div>
+
+        <!-- Tips Checklist + FAQ -->
+        <div class="tips-faq-grid">
+          <article class="card card-yellow">
+            <h3 class="card-title">5 Practical Ways to Avoid Blurry Prints</h3>
+            <ul class="tips-list">
+              <li>
+                <span class="tip-check">1</span>
+                <span><strong>Design at your target size from the start:</strong> Set your canvas in Photoshop, Procreate, Figma, or Canva directly to 300 DPI at the final paper dimensions (e.g., 4961 × 7016 px for A2).</span>
+              </li>
+              <li>
+                <span class="tip-check">2</span>
+                <span><strong>Respect the Green-to-Red border:</strong> Whenever scaling up turns PeachyPrint’s border red, either scale back down to the suggested safe percentage or export a larger original file.</span>
+              </li>
+              <li>
+                <span class="tip-check">3</span>
+                <span><strong>Use vectors for text &amp; logos:</strong> Text, icons, and line art stay infinitely sharp when exported from vector tools (Illustrator, Inkscape, Figma) at high resolution.</span>
+              </li>
+              <li>
+                <span class="tip-check">4</span>
+                <span><strong>Avoid screenshots or messaging downloads:</strong> Apps like WhatsApp and Instagram compress images heavily — always use the original uncompressed PNG, TIFF, or high-quality JPEG.</span>
+              </li>
+              <li>
+                <span class="tip-check">5</span>
+                <span><strong>Export true-size PDF for print shops:</strong> Sending a properly sized ISO PDF prevents automatic printer “stretch-to-fit” distortion and keeps margins predictable.</span>
+              </li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3 class="card-title">Frequently Asked Questions</h3>
+            <div class="faq-list">
+              <details class="faq-item" open>
+                <summary>What happens when I enlarge an A4 design onto an A2 poster?</summary>
+                <p>
+                  A2 is exactly 2× wider and 2× taller than A4 (4× the area). Enlarging an A4 image to fill an A2 sheet cuts its
+                  effective DPI in half. If your A4 file was 300 DPI (2480 × 3508 px), it becomes 150 DPI on A2 — still acceptable
+                  for standard posters, whereas a 150 DPI A4 file drops to 75 DPI and will look noticeably pixelated (Red border).
+                </p>
+              </details>
+              <details class="faq-item">
+                <summary>Are my uploaded images sent to a server?</summary>
+                <p>
+                  Never! PeachyPrint runs 100% locally inside your web browser using the HTML5 Canvas API. Your photos, designs,
+                  and exported PNG/PDF files never leave your computer or phone.
+                </p>
+              </details>
+              <details class="faq-item">
+                <summary>Does exporting at 300 DPI magically fix a low-resolution image?</summary>
+                <p>
+                  No — exporting a 595 × 842 px image onto a 300 DPI A2 PDF creates a crisp container page, but the source artwork
+                  still only contains its original pixels. That is why PeachyPrint calculates effective DPI strictly from your
+                  source image’s real pixel count and warns you with a red border before you print.
+                </p>
+              </details>
+              <details class="faq-item">
+                <summary>Should I download PNG or PDF for my print shop?</summary>
+                <p>
+                  Choose <strong>PDF (True ISO Size)</strong> when sending files to a copy shop or office printer so the exact
+                  physical millimeter size (such as 420 × 594 mm for A2) is embedded automatically. Choose <strong>PNG</strong>
+                  when you want a lossless raster image to import into another design app.
+                </p>
+              </details>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <a href="/" class="brand" style="font-size:1.15rem;">
+          <img src="/assets/favicon.svg" alt="" class="brand-icon" width="32" height="32" />
+          <span>Peachy<span class="brand-accent">Print</span></span>
+        </a>
+        <p class="footer-copy">Cute, privacy-first ISO paper format &amp; print DPI simulator. All image processing stays in your browser.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/">Simulator</a>
+        <a href="/#guide">ISO &amp; DPI Guide</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy">Privacy Policy</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/js/paper-data.js"></script>
+  <script src="/js/samples.js"></script>
+  <script src="/js/pdf-export.js"></script>
+  <script src="/js/simulator.js"></script>
+</body>
+</html>

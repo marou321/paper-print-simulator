@@ -1,0 +1,24 @@
+{
+  "name": "peachyprint",
+  "version": "1.0.0",
+  "description": "PeachyPrint — Cute interactive ISO paper-format (A0–A5) & print-resolution (DPI) simulator with live pixelation warnings and PNG/PDF export.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "paper-size",
+    "iso-216",
+    "print-dpi",
+    "resolution-simulator",
+    "pixelation",
+    "pdf-export",
+    "a4",
+    "a2"
+  ],
+  "license": "MIT"
+}

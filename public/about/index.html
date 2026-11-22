@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About PeachyPrint — Visual Paper Format &amp; Print DPI Simulator</title>
+  <meta name="description" content="Learn how PeachyPrint simulates ISO A0–A5 paper sizes, calculates live print DPI, and helps designers, students, and creators avoid pixelated prints." />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4588627708948117" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="brand" aria-label="PeachyPrint Home">
+        <img src="/assets/favicon.svg" alt="" class="brand-icon" width="40" height="40" />
+        <span>Peachy<span class="brand-accent">Print</span></span>
+      </a>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="/" class="nav-link">Simulator</a>
+        <a href="/#guide" class="nav-link">ISO &amp; DPI Guide</a>
+        <a href="/about" class="nav-link active">About</a>
+        <a href="/contact" class="nav-link">Contact</a>
+        <a href="/privacy" class="nav-link">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container-narrow">
+        <span class="hero-pill">✦ About PeachyPrint</span>
+        <h1>Making Print Sizing Visual, Friendly &amp; Foolproof</h1>
+        <p>
+          No more guessing whether your artwork will look crisp on A2 or turn blocky at the copy shop.
+          PeachyPrint turns print DPI math into an intuitive pastel paper studio.
+        </p>
+      </div>
+    </section>
+
+    <section class="container-narrow" style="padding-bottom: 3rem;">
+      <article class="prose-card">
+        <h2>Why We Built PeachyPrint</h2>
+        <p>
+          Most people only discover that an image is too low-resolution <em>after</em> paying for a poster or picking up a stack of flyers.
+          Traditional DPI calculators give you abstract numbers in a spreadsheet, without letting you actually see how an
+          <strong>A4 sheet</strong> sits inside an <strong>A2 poster</strong> or what happens the moment you scale it up.
+        </p>
+        <p>
+          PeachyPrint bridges that gap with real-time visual simulation: you see true ISO 216 paper proportions side-by-side,
+          drag and resize directly on the target canvas, get immediate <strong>Green-to-Red border feedback</strong> as pixel density changes,
+          and export print-ready PNG, JPEG, or true physical-size PDF files in one click.
+        </p>
+
+        <h2>How Our Print Resolution Math Works</h2>
+        <p>
+          PeachyPrint reads the exact native pixel dimensions (<code>width × height</code>) of your uploaded image or sample sheet.
+          As you choose a source format (A5–A0), place it on a target format, and scale it up or down, we compute the physical printed
+          dimensions in millimeters and inches (<code>inches = mm ÷ 25.4</code>) and calculate:
+        </p>
+        <div class="formula-box" style="margin-bottom: 1rem;">
+          Effective DPI = min( Image Width ÷ Printed Width in Inches, Image Height ÷ Printed Height in Inches )
+        </div>
+        <ul>
+          <li><strong>Green Border (Sharp / Safe):</strong> Effective DPI meets or exceeds your chosen print profile (150+ DPI for standard prints, 240+ DPI for fine art/photos, or 100+ DPI for wall posters).</li>
+          <li><strong>Red Border (Pixelation Warning):</strong> Effective DPI drops below the safe threshold, indicating noticeable softness, jagged edges, or blockiness on physical paper.</li>
+        </ul>
+
+        <h2>100% Privacy-First, Local Browser Processing</h2>
+        <p>
+          Your illustrations, client posters, family photos, and documents are <strong>never uploaded to a remote server</strong>.
+          Everything — reading your image, simulating pixel density, rendering the print magnifier, and generating your PNG or ISO PDF export —
+          happens completely locally in your web browser.
+        </p>
+
+        <h2>Who Uses PeachyPrint?</h2>
+        <ul>
+          <li><strong>Illustrators &amp; Indie Shop Owners:</strong> Verify sticker sheets, art prints, and zines across A5, A4, A3, and A2 before printing inventory.</li>
+          <li><strong>Students &amp; Researchers:</strong> Check academic conference posters (A1/A0) so charts, diagrams, and captions stay crystal clear.</li>
+          <li><strong>Small Businesses &amp; Event Hosts:</strong> Preview café menus, pop-up flyers, and signage without expensive test prints.</li>
+        </ul>
+
+        <div style="margin-top: 1.6rem;">
+          <a href="/" class="btn-primary" style="width: auto; padding: 0.78rem 1.5rem;">Try the Simulator Now →</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <a href="/" class="brand" style="font-size:1.15rem;">
+          <img src="/assets/favicon.svg" alt="" class="brand-icon" width="32" height="32" />
+          <span>Peachy<span class="brand-accent">Print</span></span>
+        </a>
+        <p class="footer-copy">Cute, privacy-first ISO paper format &amp; print DPI simulator.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/">Simulator</a>
+        <a href="/#guide">ISO &amp; DPI Guide</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy">Privacy Policy</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/js/simulator.js"></script>
+</body>
+</html>
