@@ -40,7 +40,7 @@ function setSecurityHeaders(res) {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 }
 
-function sendJson(res, statusCode, payload) {
+function sendJson(res, statusCode, payload, isHead = false) {
   const body = JSON.stringify(payload);
   setSecurityHeaders(res);
   res.writeHead(statusCode, {
@@ -48,7 +48,7 @@ function sendJson(res, statusCode, payload) {
     'Content-Length': Buffer.byteLength(body),
     'Cache-Control': 'no-store'
   });
-  res.end(body);
+  res.end(isHead ? undefined : body);
 }
 
 function serveFile(req, res, filePath, statusCode = 200) {
@@ -174,7 +174,12 @@ function handleRequest(req, res) {
 
   // API Endpoints
   if (pathname === '/api/health' && (req.method === 'GET' || req.method === 'HEAD')) {
-    return sendJson(res, 200, { status: 'ok', service: 'peachyprint', timestamp: new Date().toISOString() });
+    return sendJson(
+      res,
+      200,
+      { status: 'ok', service: 'peachyprint', timestamp: new Date().toISOString() },
+      req.method === 'HEAD'
+    );
   }
 
   if (pathname === '/api/contact' && req.method === 'POST') {
